@@ -24,6 +24,7 @@ export async function extractByDungeon(key: string, option: ExtractOption) {
 
   const folderName = `${option.root}/${option.dir}`;
 
+  await makeFolder(`${option.root}/extract`);
   await makeFolder(folderName);
   const data = await extractItemsData(page);
   option.withPicture && (await downloadPictures(data, folderName));
