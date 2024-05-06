@@ -28,7 +28,7 @@ import { extractByDungeon } from './src/extract/items-by-dungeons';
     await extractByDungeon(dungeon, {
       withPicture: picture,
       root: __dirname,
-      dir: `/extract/${dirname || dungeon}`
+      dir: `extract/${dirname || dungeon}`
     });
   }
 })();
