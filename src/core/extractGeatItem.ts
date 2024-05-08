@@ -63,15 +63,18 @@ export async function extractGearItem(
     }
 
     //Extract source item
-    const sourceRaw = await row.$('td:nth-child(10)');
-    const allRaw = await sourceRaw!.textContent();
-    const dungeonElement = await sourceRaw!.$('a');
-    if (dungeonElement) {
-      item.dungeon = (await dungeonElement.textContent()) || '';
+    const elem = await row.$('td:nth-child(10)');
+    const sourceElem = await elem.$('> a');
+    if (sourceElem) {
+      item.source = await sourceElem.textContent();
     }
-    item.source = allRaw!.replace(item.dungeon!, '');
+    const dungeonElem = await elem.$('> div a');
+    if (dungeonElem) {
+      item.dungeon = await dungeonElem.textContent();
+    }
 
-    console.log(item);
+    console.log(`${item.title} (${item.wowId}) successfull extract`);
+
     items.push(item);
   }
 

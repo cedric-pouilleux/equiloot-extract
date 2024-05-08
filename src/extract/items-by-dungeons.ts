@@ -1,9 +1,7 @@
 import { chromium } from 'playwright';
 import { downloadPictures } from '../core/downloadPicture';
 import { extractItemsData } from '../core/extractGeatItem';
-import { exit } from 'process';
 import { dungeons } from '../data/raids';
-import { writeFileSync } from 'node:fs';
 import { makeFolder } from '../core/makeFolder';
 
 type ExtractOption = {
@@ -12,7 +10,7 @@ type ExtractOption = {
   root: string;
 };
 
-export async function extractByDungeon(key: string, option: ExtractOption) {
+export async function extractByDungeon(key: string, pictureFolder?: string) {
   const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext();
   const page = await context.newPage();
@@ -22,13 +20,12 @@ export async function extractByDungeon(key: string, option: ExtractOption) {
   await page.locator('#onetrust-banner-sdk').isHidden();
   await page.waitForSelector('.listview-mode-default');
 
-  const folderName = `${option.root}/${option.dir}`;
+  // old picture folder
+  // const folderName = `${option.root}/${option.dir}`;
 
-  await makeFolder(`${option.root}/extract`);
-  await makeFolder(folderName);
+  //use folder name as fn prop
   const data = await extractItemsData(page);
-  option.withPicture && (await downloadPictures(data, folderName));
-  writeFileSync(`${folderName}/data.json`, JSON.stringify(data), 'utf8');
+  pictureFolder && (await downloadPictures(data, pictureFolder));
 
-  exit();
+  return data;
 }
